@@ -35,37 +35,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event Listeners for Opening Modals
-    loginBtn.addEventListener('click', () => {
-        openModal(loginModal);
-    });
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            openModal(loginModal);
+        });
+    }
 
-    registerBtn.addEventListener('click', () => {
-        openModal(registerModal);
-    });
+    if (registerBtn) {
+        registerBtn.addEventListener('click', () => {
+            openModal(registerModal);
+        });
+    }
 
-    getStartedBtn.addEventListener('click', () => {
-        openModal(registerModal);
-    });
+    if (getStartedBtn) {
+        getStartedBtn.addEventListener('click', () => {
+            openModal(registerModal);
+        });
+    }
 
     // Event Listeners for Closing Modals
-    closeLogin.addEventListener('click', () => {
-        closeModal(loginModal);
-    });
+    if (closeLogin) {
+        closeLogin.addEventListener('click', () => {
+            closeModal(loginModal);
+        });
+    }
 
-    closeRegister.addEventListener('click', () => {
-        closeModal(registerModal);
-    });
+    if (closeRegister) {
+        closeRegister.addEventListener('click', () => {
+            closeModal(registerModal);
+        });
+    }
 
     // Event Listeners for Switching Between Modals
-    switchToRegister.addEventListener('click', () => {
-        closeModal(loginModal);
-        openModal(registerModal);
-    });
+    if (switchToRegister) {
+        switchToRegister.addEventListener('click', () => {
+            closeModal(loginModal);
+            openModal(registerModal);
+        });
+    }
 
-    switchToLogin.addEventListener('click', () => {
-        closeModal(registerModal);
-        openModal(loginModal);
-    });
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', () => {
+            closeModal(registerModal);
+            openModal(loginModal);
+        });
+    }
 
     // Close modal when clicking outside of it
     window.addEventListener('click', (event) => {
@@ -120,49 +134,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Login Form Submission
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        hideAllErrors();
+    if (loginForm) {
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            hideAllErrors();
 
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
 
-        let isValid = true;
+            let isValid = true;
 
-        // Validate email
-        if (!email) {
-            showError('loginEmailError', 'Email is required');
-            isValid = false;
-        } else if (!validateEmail(email)) {
-            showError('loginEmailError', 'Please enter a valid email address');
-            isValid = false;
-        }
+            // Validate email
+            if (!email) {
+                showError('loginEmailError', 'Email is required');
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                showError('loginEmailError', 'Please enter a valid email address');
+                isValid = false;
+            }
 
-        // Validate password
-        if (!password) {
-            showError('loginPasswordError', 'Password is required');
-            isValid = false;
-        }
+            // Validate password
+            if (!password) {
+                showError('loginPasswordError', 'Password is required');
+                isValid = false;
+            }
 
-        if (isValid) {
-            // Here you would typically send the data to a server
-            console.log('Login form submitted:', { email, password });
-            
-            // Show success message
-            alert('Login successful! Welcome back to Playful Mind Academy!');
-            
-            // Reset form and close modal
-            loginForm.reset();
-            closeModal(loginModal);
-            
-            // In a real application, you would redirect to a dashboard or home page
-            // window.location.href = '/dashboard';
-        }
-    });
+            if (isValid) {
+                // Here you would typically send the data to a server
+                console.log('Login form submitted:', { email, password });
+                
+                // Show success message
+                alert('Login successful! Welcome back to Playful Mind Academy!');
+                
+                // Reset form and close modal
+                loginForm.reset();
+                closeModal(loginModal);
+                
+                // In a real application, you would redirect to a dashboard or home page
+                // window.location.href = '/dashboard';
+            }
+        });
+    }
 
     // Register Form Submission
-    registerForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+    if (registerForm) {
+        registerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
         hideAllErrors();
 
         const name = document.getElementById('registerName').value.trim();
@@ -177,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showError('registerNameError', 'Name is required');
             isValid = false;
         } else if (!validateName(name)) {
-                showError('registerNameError', 'Name must be at least 2 characters long');
+            showError('registerNameError', 'Name must be at least 2 characters long');
             isValid = false;
         }
 
@@ -222,32 +239,51 @@ document.addEventListener('DOMContentLoaded', () => {
             // In a real application, you would redirect to a dashboard or home page
             // window.location.href = '/dashboard';
         }
-    });
+        });
+    }
 
     // Real-time validation on input
-    document.getElementById('loginEmail').addEventListener('input', () => {
-        hideError('loginEmailError');
-    });
+    const loginEmail = document.getElementById('loginEmail');
+    if (loginEmail) {
+        loginEmail.addEventListener('input', () => {
+            hideError('loginEmailError');
+        });
+    }
 
-    document.getElementById('loginPassword').addEventListener('input', () => {
-        hideError('loginPasswordError');
-    });
+    const loginPassword = document.getElementById('loginPassword');
+    if (loginPassword) {
+        loginPassword.addEventListener('input', () => {
+            hideError('loginPasswordError');
+        });
+    }
 
-    document.getElementById('registerName').addEventListener('input', () => {
-        hideError('registerNameError');
-    });
+    const registerName = document.getElementById('registerName');
+    if (registerName) {
+        registerName.addEventListener('input', () => {
+            hideError('registerNameError');
+        });
+    }
 
-    document.getElementById('registerEmail').addEventListener('input', () => {
-        hideError('registerEmailError');
-    });
+    const registerEmail = document.getElementById('registerEmail');
+    if (registerEmail) {
+        registerEmail.addEventListener('input', () => {
+            hideError('registerEmailError');
+        });
+    }
 
-    document.getElementById('registerPassword').addEventListener('input', () => {
-        hideError('registerPasswordError');
-    });
+    const registerPassword = document.getElementById('registerPassword');
+    if (registerPassword) {
+        registerPassword.addEventListener('input', () => {
+            hideError('registerPasswordError');
+        });
+    }
 
-    document.getElementById('registerConfirmPassword').addEventListener('input', () => {
-        hideError('registerConfirmPasswordError');
-    });
+    const registerConfirmPassword = document.getElementById('registerConfirmPassword');
+    if (registerConfirmPassword) {
+        registerConfirmPassword.addEventListener('input', () => {
+            hideError('registerConfirmPasswordError');
+        });
+    }
 
     // Smooth scroll for "Learn More" button
     const learnMoreBtn = document.querySelector('.btn-learn-more');
