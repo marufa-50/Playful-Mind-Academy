@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Playful Mind Academy • Filter Content</title>
+<link rel="stylesheet" href="filter-content.css"/>
+</head>
+<body>
+<header class="bar">
+  <button class="pill back" id="btnBack">Back</button>
+  <h1>Playful Mind Academy</h1>
+  <button class="pill good sub" id="btnSubscribe">Subscribe</button>
+</header>
+
+<main class="grid">
+  <aside class="card">
+    <h3>Family Dashboard</h3>
+    <p>Streak: <b id="streak">0</b> ⭐</p>
+    <div class="row">
+      <input id="childName" placeholder="Child name"/><button class="pill" id="addChild">Add</button>
+    </div>
+    <ul id="childList" class="list"></ul>
+  </aside>
+
+  <section class="card">
+    <header class="cardhead">
+      <div>
+        <h2>Filter Content</h2>
+        <small>Ratings, whitelists & safe search</small>
+      </div>
+    </header>
+
+    <div class="row">
+      <label><input type="radio" name="rating" value="Kids" checked/> Kids</label>
+      <label><input type="radio" name="rating" value="Family"/> Family</label>
+      <label><input type="radio" name="rating" value="Teen"/> Teen</label>
+      <label class="switch"><input type="checkbox" id="safe" checked/> Safe Search</label>
+    </div>
+
+    <div class="row">
+      <input id="siteInput" placeholder="https://example.com"/><button class="pill" id="addSite">Add Site</button>
+    </div>
+    <div id="whitelist" class="chips"></div>
+
+    <h4>Allowed Activities</h4>
+    <div id="acts" class="chips">
+      <button class="chip on" data-act="games">Games</button>
+      <button class="chip on" data-act="drawing">Drawing</button>
+      <button class="chip on" data-act="helpMother">Help Mother</button>
+      <button class="chip on" data-act="donation">Donation</button>
+      <button class="chip on" data-act="physical">Physical</button>
+    </div>
+
+    <div class="meter"><span id="meterFill"></span></div>
+    <p id="summary" class="muted"></p>
+
+    <footer class="actions">
+      <button class="pill" id="btnDetails">Details</button>
+      <button class="pill ok" id="btnComplete">Complete Task</button>
+      <button class="pill" id="btnOK">OK</button>
+    </footer>
+
+    <div id="details" class="details hide">
+      <ul class="list">
+        <li>Play a puzzle game 🎲</li>
+        <li>Do a drawing 🖍️</li>
+        <li>Help mother 🧹</li>
+        <li>Donate toys 🧸</li>
+      </ul>
+      <button class="pill" id="btnCloseDetails">Close</button>
+    </div>
+  </section>
+</main>
+
+<script src="filter-content.js"></script>
+</body>
+</html>

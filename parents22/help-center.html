@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parents Help Center</title>
+  <link rel="stylesheet" href="help-center.css">
+</head>
+<body>
+
+<!-- Back Button -->
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+<header class="header">
+  <h1>👨‍👩‍👧 Parents Help Center</h1>
+  <p>School Parents Community Support</p>
+</header>
+
+<div class="page-wrapper">
+
+  <!-- Left Cartoon -->
+  <div class="cartoon left-cartoon">
+    <img src="parent.svg" alt="Parent Cartoon">
+  </div>
+
+  <!-- Help Content -->
+  <section class="help-container">
+    <h2>How Can We Help You?</h2>
+
+    <details class="faq">
+      <summary>📞 How can I contact my child’s teacher?</summary>
+      <p>Parents can contact teachers via the school portal, email, or parent‑teacher meetings.</p>
+    </details>
+
+    <details class="faq">
+      <summary>📊 Where can I see academic progress?</summary>
+      <p>Progress reports are available in the Progress Tracking section of the school website.</p>
+    </details>
+
+    <details class="faq">
+      <summary>⏱️ How do I manage screen time?</summary>
+      <p>Screen time can be managed using parental control tools provided by the school.</p>
+    </details>
+
+    <details class="faq">
+      <summary>🛠️ Who do I contact for technical help?</summary>
+      <p>Contact the IT Help Desk through the school portal or email support@school.edu.</p>
+    </details>
+
+    <details class="faq">
+      <summary>🎉 How can I join parent community events?</summary>
+      <p>Event announcements are shared via notices, emails, and the parent community page.</p>
+    </details>
+
+    <!-- Special Feature -->
+    <button class="highlight-btn" onclick="showTip()">💡 Parenting Tip</button>
+    <p id="tipBox" class="tip-box"></p>
+  </section>
+
+  <!-- Right Cartoon -->
+  <div class="cartoon right-cartoon">
+    <img src="child.svg" alt="Child Cartoon">
+  </div>
+
+</div>
+
+<footer>
+  © 2025 School Parents Community | Help Center
+</footer>
+
+<script src="help-center.js"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Playful Academy • Progress Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="progress-track.css" />
+</head>
+<body>
+  <header class="bar">
+    <button id="bBack" class="btn">← Back</button>
+    <div class="brand">🔒 Playful Academy <span class="sub">Family learning</span></div>
+    <div class="bar-actions">
+      <button id="bParents" class="btn outline">Parents View</button>
+      <button id="bSubscribe" class="btn green">Subscribe</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero">
+      <div>
+        <h1>Progress Tracking</h1>
+        <p>Friendly scores, streaks, time-on-task and badges for playful activities: 🎮 games, 🎨 drawing, 🤝 helping, 💝 donating, 🏃 moving, 🗣️ socializing.</p>
+
+        <div class="row">
+          <label>Child</label>
+          <select id="childSel"></select>
+          <button id="bAddChild" class="btn soft">+ Add Child</button>
+        </div>
+
+        <div class="pill">
+          <div><small>Score</small><strong id="sScore">0</strong></div>
+          <div><small>Streak</small><strong id="sStreak">0 days 🔥</strong></div>
+          <div><small>Time today</small><strong id="sTime">0m</strong></div>
+          <div><small>Level</small><strong id="sLevel">Newbie 🌱</strong></div>
+        </div>
+
+        <button id="bProgress" class="btn green">Open</button>
+      </div>
+
+      <div class="chips">
+        <span>🎮 Games</span><span>🎨 Drawing</span><span>🤝 Help</span>
+        <span>💝 Donating</span><span>🏃 Physical</span><span>🗣️ Social</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Activities Library</h2>
+        <p>Pick, edit and track playful tasks. Points grow streak power.</p>
+        <div class="row">
+          <input id="q" type="search" placeholder="Search…" />
+          <select id="cat">
+            <option value="">All</option>
+            <option>Games</option><option>Drawing</option><option>Help Mother</option>
+            <option>Donation</option><option>Physical</option><option>Socialization</option>
+          </select>
+          <button id="bAdd" class="btn soft">+ Add Activity</button>
+        </div>
+        <div id="library" class="list"></div>
+      </div>
+
+      <div class="card">
+        <h2>Today’s Tasks</h2>
+        <p>Start a task to track time. Complete it to earn points and badges.</p>
+        <div id="today" class="list"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Badges</h2>
+        <div id="badges" class="badges"></div>
+        <button id="bBadgeInfo" class="btn outline">Badge Info</button>
+      </div>
+
+      <div class="card">
+        <h2>Level</h2>
+        <div class="barline"><span id="levelFill"></span></div>
+        <div class="row small"><span>🌱 Newbie</span><span>⭐ Active</span><span>🌟 Super</span><span>🏆 Champ</span></div>
+        <button id="bRank" class="btn outline">Open</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Games / Guidelines</h2>
+      <p>Clear, kind rules. Parents can view only.</p>
+      <button id="bGuidelines" class="btn soft">Open</button>
+    </section>
+
+    <footer class="foot">© Playful Academy • A family learning experience</footer>
+  </main>
+
+  <!-- Simple modal -->
+  <div id="modal" class="modal">
+    <div class="sheet">
+      <header class="sheet-head">
+        <h3 id="mTitle">Title</h3>
+        <button id="mX" class="btn outline">✕</button>
+      </header>
+      <div id="mBody"></div>
+      <footer class="sheet-actions">
+        <button id="mBack" class="btn">Back</button>
+        <button id="mOk" class="btn green">OK</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Tiny snackbar -->
+  <div id="snack" class="snack"></div>
+
+  <script>window.APP_USER = "marufa-50";</script>
+  <script src="progress-track.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playful Mind Academy • Screen Time Limit</title>
+  <link rel="stylesheet" href="screen-time.css" />
+</head>
+<body>
+  <!-- Header / Nav -->
+  <header class="app-header">
+    <button class="btn ghost" id="btnBack">⟵ Back</button>
+    <div class="brand">
+      <strong>Playful Mind Academy</strong>
+      <span class="subtitle">Family fun portal</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn outline" id="btnParentPanel">Parent View</button>
+      <button class="btn primary" id="btnSubscribe">Subscribe 🌼</button>
+    </div>
+  </header>
+
+  <!-- Top ribbon navigation inspired by image 1 -->
+  <nav class="ribbon">
+    <button class="chip active">Screen Time Limit</button>
+    <button class="chip">Progress Tracking</button>
+    <button class="chip">Games & Activities</button>
+    <button class="chip">Set Goal</button>
+  </nav>
+
+  <!-- Hero with kids inspired by image 2 -->
+  <section class="hero">
+    <div class="kid-card left">
+      <div class="kid-avatar" id="leftKidAvatar">🧒</div>
+      <div class="kid-info">
+        <div class="kid-name" id="currentChildName">Guest Kid</div>
+        <div class="kid-streak">Streak ⭐ <span id="streakPoints">0</span></div>
+        <button class="btn small" id="btnAddChild">Add Child</button>
+        <button class="btn small" id="btnSwitchChild">Switch</button>
+      </div>
+    </div>
+
+    <div class="hero-center">
+      <h1>Screen Time Limit & Activity Timing</h1>
+      <p class="hero-sub">See which fun activities take more or less screen time today.</p>
+      <div class="quota">
+        <label for="dailyQuota">Daily screen quota (min)</label>
+        <input type="range" id="dailyQuota" min="20" max="240" step="10" />
+        <div class="quota-stats">
+          <span>Limit: <strong><span id="quotaLabel">120</span>m</strong></span>
+          <span>Used: <strong><span id="usedToday">0</span>m</strong></span>
+          <span>Remaining: <strong><span id="remainingToday">0</span>m</strong></span>
+        </div>
+        <canvas id="quotaRing" width="140" height="140" aria-label="Quota progress ring"></canvas>
+      </div>
+    </div>
+
+    <div class="kid-card right">
+      <div class="kid-avatar" id="rightKidAvatar">👧</div>
+      <div class="kid-info">
+        <div class="kid-parents">MOM & DAD Panel</div>
+        <small>Parents can view rules & timing (read‑only)</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timing controls -->
+  <section class="card-grid">
+    <article class="card">
+      <header class="card-header">
+        <h2>Timing Controls</h2>
+        <button class="btn tiny" id="btnEditRules">Edit</button>
+      </header>
+      <div class="grid two">
+        <div>
+          <label>Bedtime start</label>
+          <input type="time" id="bedStart" value="21:00" />
+        </div>
+        <div>
+          <label>Bedtime end</label>
+          <input type="time" id="bedEnd" value="07:00" />
+        </div>
+      </div>
+      <div class="grid three">
+        <label class="switch">
+          <input type="checkbox" id="overrideToday" />
+          <span>Override today (party mode 🎉)</span>
+        </label>
+        <button class="btn" id="btnSaveRules">Save</button>
+        <button class="btn subtle" id="btnResetToday">Reset Today</button>
+      </div>
+      <p class="hint">Rules keep things cozy. Overrides are for special days only.</p>
+    </article>
+
+    <!-- Activity logger -->
+    <article class="card">
+      <header class="card-header">
+        <h2>Log Screen Activity</h2>
+        <div class="actions">
+          <button class="btn tiny" id="btnDetailsAll">Details</button>
+        </div>
+      </header>
+
+      <div class="grid four" id="activityGrid">
+        <!-- Cards injected by JS -->
+      </div>
+
+      <div class="session-controls">
+        <div class="grid three">
+          <div>
+            <label>Current activity</label>
+            <select id="currentActivity"></select>
+          </div>
+          <div>
+            <label>Manual minutes</label>
+            <input type="number" id="manualMinutes" min="1" max="240" value="10" />
+          </div>
+          <div class="buttons">
+            <button class="btn" id="btnStart">Start</button>
+            <button class="btn" id="btnComplete">Complete</button>
+            <button class="btn subtle" id="btnLogManual">Log Manual</button>
+          </div>
+        </div>
+        <div id="timerStatus" class="timer-status">No active session</div>
+      </div>
+    </article>
+
+    <!-- Charts -->
+    <article class="card">
+      <header class="card-header">
+        <h2>Time Limit Graphs</h2>
+        <div class="actions">
+          <button class="btn tiny" id="btnRefreshCharts">Refresh</button>
+        </div>
+      </header>
+      <div class="grid two">
+        <div>
+          <canvas id="barChart" width="560" height="280" aria-label="Bar chart of minutes per activity"></canvas>
+        </div>
+        <div>
+          <canvas id="donutChart" width="280" height="280" aria-label="Donut chart of share per activity"></canvas>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <canvas id="lineChart" width="860" height="200" aria-label="Line chart of minutes over the day"></canvas>
+      </div>
+    </article>
+
+    <!-- Actions log -->
+    <article class="card">
+      <header class="card-header">
+        <h2>Today’s Action Log</h2>
+        <div class="actions">
+          <button class="btn tiny" id="btnSeedDemo">Add Sample Activities</button>
+          <button class="btn tiny" id="btnClearLog">Clear</button>
+        </div>
+      </header>
+      <div class="log-table-wrap">
+        <table class="log-table" id="logTable" aria-label="Action log">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Action</th>
+              <th>Activity</th>
+              <th>Minutes</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <!-- Footer (intentionally minimal per request) -->
+  <footer class="footer"></footer>
+
+  <!-- Parent panel (read-only) -->
+  <div class="modal" id="parentModal" aria-hidden="true">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h3>Parent View: Rules & Timing</h3>
+      </header>
+      <section class="modal-body">
+        <div class="grid two">
+          <div>
+            <h4>Rules & Guidelines</h4>
+            <ul class="guidelines">
+              <li>Daily quota limits screen time. Fun continues offline!</li>
+              <li>Bedtime hours are calm and screen‑free.</li>
+              <li>Party Mode is for celebrations only.</li>
+              <li>Activities earn streak points for consistency.</li>
+              <li>Parents here can view data; editing happens in the main page.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Today Overview</h4>
+            <p>Limit: <strong><span id="pLimit">0</span>m</strong></p>
+            <p>Used: <strong><span id="pUsed">0</span>m</strong></p>
+            <p>Remaining: <strong><span id="pRemain">0</span>m</strong></p>
+            <canvas id="parentDonut" width="220" height="220"></canvas>
+          </div>
+        </div>
+        <h4 style="margin-top:1rem">Recent sessions</h4>
+        <div class="log-table-wrap parent">
+          <table class="log-table" id="parentLog">
+            <thead>
+              <tr><th>Time</th><th>Activity</th><th>Minutes</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+      <footer class="modal-footer">
+        <button class="btn" id="btnParentOk">OK</button>
+        <button class="btn outline" id="btnParentClose">Close</button>
+        <button class="btn ghost" id="btnParentBack">Back</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Generic modal -->
+  <div class="modal" id="genericModal" aria-hidden="true">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h3 id="genericTitle">Details</h3>
+      </header>
+      <section class="modal-body" id="genericBody"></section>
+      <footer class="modal-footer">
+        <button class="btn" id="btnGenericOk">OK</button>
+        <button class="btn outline" id="btnGenericClose">Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <script src="screen-time.js"></script>
+</body>
+</html>

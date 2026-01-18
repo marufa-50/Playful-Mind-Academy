@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Games / Guidelines – Playful Mind Academy</title>
+  <link rel="stylesheet" href="game-Guideline.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+     <a href="index.html" class="ghost-btn">⟵ Back</a>
+
+      <div class="brand">
+        <div class="logo">🌼</div>
+        <div>
+          <div class="brand-title">Playful Mind Academy</div>
+          <div class="brand-sub">Family fun & gentle growth</div>
+        </div>
+      </div>
+      <button class="pill-btn" id="btn-subscribe">Subscribe</button>
+    </header>
+
+    <main class="content">
+      <aside class="sidebar mom">
+        <div class="avatar badge">MOM</div>
+        <div class="aside-title">Parent Portal</div>
+        <ul>
+          <li>See rules & guidelines</li>
+          <li>View progress streaks</li>
+          <li>Celebrate wins</li>
+        </ul>
+      </aside>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Games / Guidelines</p>
+            <h1>Fun-first activities with clear, kind rules</h1>
+            <p class="lede">
+              Parents can view how to play, colors to use, and simple tips to help kids
+              explore, create, donate, and earn streak points.
+            </p>
+          </div>
+          <div class="actions">
+            <button class="chip active" data-filter="all">All</button>
+            <button class="chip" data-filter="games">Games</button>
+            <button class="chip" data-filter="creative">Creative</button>
+            <button class="chip" data-filter="helping">Helping</button>
+            <button class="chip" data-filter="kindness">Kindness</button>
+          </div>
+        </div>
+
+        <div class="cards" id="cards"></div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="dot green"></span>Open</div>
+          <div class="legend-item"><span class="dot gold"></span>In progress</div>
+          <div class="legend-item"><span class="dot blue"></span>Completed</div>
+        </div>
+      </section>
+
+      <aside class="sidebar dad">
+        <div class="avatar badge">DAD</div>
+        <div class="aside-title">Quick Actions</div>
+        <ul>
+          <li>Peek rules</li>
+          <li>Track streaks</li>
+          <li>Applaud effort</li>
+        </ul>
+      </aside>
+    </main>
+  </div>
+
+  <div class="modal" id="modal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog">
+      <header class="modal-header">
+        <h2 id="modal-title">Activity detail</h2>
+        <button class="icon-btn" id="modal-close">✕</button>
+      </header>
+      <div class="modal-body" id="modal-body"></div>
+      <footer class="modal-footer">
+        <button class="pill-btn secondary" id="modal-ok">OK</button>
+        <button class="pill-btn" id="modal-mark-complete">Mark Complete</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">🎉 Great job! Celebrate this effort.</div>
+
+  <script src="game-Guideline.js"></script>
+</body>
+</html>

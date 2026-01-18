@@ -1,0 +1,21 @@
+*{box-sizing:border-box}body{margin:0;font:16px/1.4 system-ui,Segoe UI,Arial;background:linear-gradient(#f6ffe9,#fff)}
+.bar{position:relative;display:flex;justify-content:center;align-items:center;padding:.8rem;background:#eaf9d6}
+.bar h1{margin:0;font-size:1.1rem}
+.pill{border:0;border-radius:999px;padding:.4rem .8rem;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.08);cursor:pointer}
+.good{background:#5ac27a;color:#fff}
+.back{position:absolute;top:8px;left:8px}
+.sub{position:absolute;top:8px;right:8px}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:1rem;padding:1rem}
+.card{background:#fff;border-radius:14px;padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.row{display:flex;gap:.5rem;flex-wrap:wrap}
+.list{padding-left:1rem;margin:.5rem 0}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap}
+.chip{border:0;border-radius:14px;padding:.35rem .7rem;background:#fff8d9;cursor:pointer}
+.chip.on{background:#d2ffe3}
+.meter{height:12px;background:#eef3ff;border-radius:12px;overflow:hidden;margin:.6rem 0}
+#meterFill{display:block;height:100%;width:30%;background:#5ac27a;transition:.3s}
+.actions{display:flex;gap:.5rem;margin-top:.5rem}
+.details{margin-top:.6rem}.hide{display:none}
+.muted{opacity:.7}
+.switch input{accent-color:#5ac27a}
+input,button{font:inherit}

@@ -1,0 +1,218 @@
+/* Playful Academy - CSS */
+/* Design tokens */
+:root{
+  --bg: #fff9f4;
+  --panel: #ffe7d1;
+  --accent: #7cc27c;
+  --accent-2: #f4c430;
+  --text: #2a2a2a;
+  --muted: #6b6b6b;
+  --tile: #ffffff;
+  --tile-border: #e9d9c7;
+  --heart-pink: #ff7aa2;
+  --heart-red: #ff5858;
+  --focus: #274c77;
+  --success: #2d9d5b;
+  --shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background: var(--bg);
+}
+
+/* Accessibility */
+.skip-link{
+  position:absolute; left:-999px; top:-999px;
+}
+.skip-link:focus{
+  left:16px; top:16px; z-index:1000;
+  background:#fff; color:#000; padding:.5rem 1rem; border-radius:6px; box-shadow:var(--shadow);
+}
+
+/* Header */
+.app-header{
+  display:flex; align-items:center; gap:1rem;
+  padding: .75rem 1rem;
+  background: linear-gradient(90deg, #d9f5d9, #fef3c7);
+  border-bottom: 2px solid #e2d4c5;
+  position: sticky; top:0; z-index: 10;
+}
+.app-header .brand{
+  display:flex; align-items:center; gap:.5rem;
+}
+.logo{
+  width:38px; height:38px; display:grid; place-items:center;
+  background:#fff; border-radius:50%; box-shadow:var(--shadow);
+}
+.brand-text small{color:var(--muted)}
+
+.btn{
+  border:0; border-radius:999px; padding:.6rem 1rem; font-weight:700; cursor:pointer;
+  background:#fff; color:#333; box-shadow:var(--shadow);
+}
+.btn.back{background:#ffd5a7}
+.btn.subscribe{background:#b7e5b7}
+.btn.icon-only{padding:.35rem .6rem; border-radius:10px}
+
+header .left, header .right{display:flex; align-items:center; gap:.75rem}
+header .spacer{flex:1}
+
+/* Page layout */
+.page{
+  display:grid;
+  grid-template-columns: 240px 1fr 240px;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.guardian{
+  background: var(--panel);
+  border-radius: 22px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.guardian--mom{background: #ffe1ea}
+.guardian--dad{background: #e8f1ff}
+
+.guardian-card{
+  display:flex; flex-direction:column; align-items:center; gap: .75rem;
+}
+.heart{
+  font-weight:800; letter-spacing:.5px; color:#fff;
+  padding:.4rem .75rem; border-radius: 40px;
+  box-shadow: var(--shadow);
+}
+.heart--pink{ background: var(--heart-pink) }
+.heart--red{ background: var(--heart-red) }
+
+.avatar{
+  width:120px; height:160px; border-radius:14px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,0)),
+    radial-gradient(60px 70px at 50% 25%, #bbb, #888);
+  box-shadow: var(--shadow);
+}
+.avatar--mom{ background:
+  linear-gradient(180deg, rgba(255,0,90,.08), rgba(0,0,0,0)),
+  radial-gradient(60px 70px at 50% 25%, #f3b6c8, #c78ea0);
+}
+.avatar--dad{ background:
+  linear-gradient(180deg, rgba(0,120,255,.08), rgba(0,0,0,0)),
+  radial-gradient(60px 70px at 50% 25%, #b6c9f3, #8aa0c7);
+}
+.guardian-actions{
+  list-style:none; padding:0; margin:.25rem 0 0 0; text-align:center; color:var(--muted);
+}
+.guardian-actions li{margin:.2rem 0}
+
+/* Content */
+.content{
+  display:flex; flex-direction:column; gap:1rem;
+}
+
+.ribbon{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  gap:.5rem; background: #dff3e6; padding:.5rem; border-radius: 12px;
+  border: 1px dashed #a7d1af; color:#276749; font-weight:700;
+}
+.ribbon span{
+  background:#fff; border-radius: 999px; padding:.35rem .6rem; text-align:center;
+  box-shadow: var(--shadow);
+}
+
+/* Tiles */
+.tile-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(220px,1fr));
+  gap: 1rem;
+}
+.tile{
+  background: var(--tile); border: 2px solid var(--tile-border);
+  border-radius: 18px; padding: 1rem; display:flex; flex-direction:column; gap:.5rem;
+  box-shadow: var(--shadow);
+  position:relative;
+}
+.tile h3{margin:0; font-size:1.1rem}
+.tile p{margin:0; color:var(--muted)}
+.tile-graphic{
+  margin-top:.25rem; height:80px; border-radius:14px;
+  background: linear-gradient(135deg, #f9f1e7, #fff);
+  border: 1px solid #eee;
+}
+.tile-open{
+  align-self:flex-start; margin-top:.5rem;
+  background: #f0ffe8; color:#1b5326; border:1px solid #c8e7c8; border-radius: 999px;
+  padding:.4rem .75rem; cursor:pointer; font-weight:700;
+}
+.tile:hover{transform: translateY(-2px); transition:.2s ease}
+
+/* Icons via CSS */
+.icon{ position:relative; overflow:hidden }
+.icon::after{ content:""; position:absolute; inset:16px; border-radius:12px; opacity:.9 }
+.icon--health::after{ background:
+  radial-gradient(circle at 30% 30%, #fff 0 12px, transparent 13px),
+  linear-gradient(90deg, #89cff0 0 50%, #e0f2ff 50% 100%);
+  box-shadow: inset 0 0 0 3px #e0f2ff;
+}
+.icon--charts::after{ background:
+  linear-gradient(180deg, #e5f7ea 0 60%, transparent 60%),
+  repeating-linear-gradient(90deg, #7cc27c 0 6px, transparent 6px 12px);
+}
+.icon--books::after{ background:
+  linear-gradient(90deg, #ffedd5 50%, #fde68a 50%);
+}
+.icon--target::after{ background:
+  radial-gradient(circle, #ffb3b3 0 18px, #fff 18px 26px, #ff5858 26px 34px, #fff 34px 42px) }
+.icon--clock::after{ background:
+  radial-gradient(circle at 50% 50%, #fff 0 20px, #c7e2ff 21px 60px) }
+.icon--shield::after{ background:
+  radial-gradient(60px 80px at 50% 40%, #c7f0d3, #8ed69f) }
+.icon--calendar::after{ background:
+  linear-gradient(#fffbeb 40px, #fff 40px), repeating-linear-gradient(180deg,#eee,#eee 2px,transparent 2px 24px) }
+.icon--puzzle::after{ background:
+  radial-gradient(circle at 30% 50%, #ffd6a5 0 18px, transparent 18px),
+  radial-gradient(circle at 70% 50%, #bde0fe 0 18px, transparent 18px) }
+.icon--chat::after{ background:
+  radial-gradient(circle at 30% 40%, #d1fae5 0 22px, transparent 23px),
+  radial-gradient(circle at 70% 65%, #bfdbfe 0 22px, transparent 23px) }
+
+/* Modal */
+.modal[hidden]{display:none}
+.modal__backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.3);
+}
+.modal__dialog{
+  position:fixed; inset:0; display:grid; place-items:center; padding:1rem;
+}
+.modal__dialog > *{
+  width:min(720px, 100%); background:#fff; border-radius:14px; box-shadow:var(--shadow);
+}
+.modal__header{display:flex; align-items:center; justify-content:space-between; padding:1rem; border-bottom:1px solid #eee}
+.modal__body{padding:1rem; color:#333}
+.modal__footer{padding:1rem; border-top:1px solid #eee; display:flex; justify-content:flex-end}
+
+/* Footer */
+.app-footer{
+  padding:1rem; text-align:center; color:var(--muted)
+}
+
+/* Responsive */
+@media (max-width: 1100px){
+  .page{ grid-template-columns: 1fr }
+  .guardian{ order: 2 }
+}
+@media (max-width: 860px){
+  .ribbon{ grid-template-columns: repeat(2,1fr) }
+  .tile-grid{ grid-template-columns: repeat(2,minmax(220px,1fr)) }
+}
+@media (max-width: 540px){
+  .tile-grid{ grid-template-columns: 1fr }
+  .btn{ font-size:.95rem }
+}

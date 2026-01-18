@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playful Academy — Health</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="health.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="app-header">
+    <div class="left">
+      <a class="btn back" href="index.html">Back</a>
+
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🎒</div>
+        <div class="brand-text">
+          <strong>Playful Academy</strong>
+          <small>Health Center</small>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="right">
+      <button class="btn subscribe" id="btnSubscribe" aria-label="Subscribe">Subscribe</button>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">View Health Info</p>
+        <h1>Wellness & Safety for your child</h1>
+        <p class="lede">Keep allergies, immunizations, growth and reminders in one family-friendly place.</p>
+        <div class="actions">
+          <button class="btn primary" id="btnAddRecord">Add record</button>
+          <button class="btn ghost" id="btnShare">Share selected</button>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="metric">
+          <span class="label">Upcoming</span>
+          <strong id="metricUpcoming">—</strong>
+        </div>
+        <div class="metric">
+          <span class="label">Allergies</span>
+          <strong id="metricAllergies">—</strong>
+        </div>
+        <div class="metric">
+          <span class="label">Last update</span>
+          <strong id="metricUpdated">—</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="profile" aria-label="Child profile">
+        <div class="avatar" aria-hidden="true">🧒</div>
+        <div>
+          <h2 id="childName">Child</h2>
+          <p id="childAge" class="muted">Age —</p>
+        </div>
+        <div class="tags">
+          <span class="tag">Growth</span>
+          <span class="tag">Immunizations</span>
+          <span class="tag">Allergies</span>
+        </div>
+        <div class="card">
+          <h3>Reminders</h3>
+          <ul id="reminders" class="simple-list"></ul>
+          <button class="btn small" id="btnAddReminder">Add reminder</button>
+        </div>
+      </aside>
+
+      <section class="records" aria-label="Health records">
+        <div class="toolbar">
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-type="all">All</button>
+            <button class="tab" data-type="Immunization">Immunizations</button>
+            <button class="tab" data-type="Allergy">Allergies</button>
+            <button class="tab" data-type="Checkup">Checkups</button>
+          </div>
+          <div class="filters">
+            <input id="search" type="search" placeholder="Search notes…" aria-label="Search records">
+            <select id="sort" aria-label="Sort records">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="upcoming">Upcoming first</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="recordsList" class="cards"></div>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden role="status"></div>
+
+  <!-- Modal for add/edit -->
+  <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__backdrop" id="modalBackdrop" tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <header class="modal__header">
+        <h2 id="modalTitle">Add record</h2>
+        <button class="btn icon-only" id="modalClose" aria-label="Close">✕</button>
+      </header>
+      <form id="modalForm" class="modal__body">
+        <label>
+          Type
+          <select name="type" required>
+            <option value="">Select type</option>
+            <option>Immunization</option>
+            <option>Allergy</option>
+            <option>Checkup</option>
+            <option>Note</option>
+          </select>
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" rows="3" placeholder="Details…" required></textarea>
+        </label>
+        <label>
+          Date
+          <input type="date" name="date" required>
+        </label>
+        <input type="hidden" name="id" />
+      </form>
+      <footer class="modal__footer">
+        <button class="btn ghost" type="button" id="modalCancel">Cancel</button>
+        <button class="btn primary" type="submit" form="modalForm">Save</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="health.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playful Academy • Activity Resources</title>
+  <link rel="stylesheet" href="education_resource.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Boogaloo&display=swap" rel="stylesheet">
+  <script defer src="education_resource.js"></script>
+</head>
+<body>
+  <!-- Top App Bar -->
+  <header class="appbar" aria-label="App top bar">
+    <button id="btnBack" class="btn pill ghost" aria-label="Go back">Back</button>
+    <div class="brand">
+      <span class="brand-lock" aria-hidden="true">🔒</span>
+      <span class="brand-title">Playful Academy</span>
+      <span class="brand-subtitle">Family learning</span>
+    </div>
+    <div class="appbar-actions">
+      <button id="btnSubscribe" class="btn pill primary">Subscribe</button>
+    </div>
+  </header>
+
+  <!-- Decorative child section inspired by image 2 -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="mascot-card girl" aria-hidden="true">
+        <div class="sparkles">✦ ✦ ✦</div>
+        <div class="mascot-emoji" aria-label="Girl mascot">👧</div>
+      </div>
+    </div>
+    <div class="hero-center">
+      <nav class="pill-tabs" role="tablist" aria-label="Main navigation">
+        <button class="pill-tab" data-tab="health">View Health Info</button>
+        <button class="pill-tab" data-tab="progress">Progress Tracking</button>
+        <button class="pill-tab active" data-tab="resources">Activity Resources</button>
+        <button class="pill-tab" data-tab="goal">Set Goal</button>
+      </nav>
+
+      <h1 class="page-title">Activity Resources</h1>
+      <p class="page-subtitle">Curated by age, category & format — fun-only school: games, drawing, help mother, donations, and more.</p>
+
+      <!-- Child profile controls -->
+      <div class="child-bar">
+        <div class="child-info">
+          <div id="childAvatar" class="avatar">🧒</div>
+          <div>
+            <div id="childName" class="name">Your Child</div>
+            <div id="childAge" class="age">Age: —</div>
+          </div>
+        </div>
+        <div class="child-controls">
+          <button id="btnAddChild" class="btn pill secondary">Add Child</button>
+          <button id="btnParentPanel" class="btn pill ghost">Parents Panel</button>
+        </div>
+      </div>
+
+      <!-- Filters (inspired by image 1 cards and image 2 categories) -->
+      <div class="filters-card card">
+        <div class="filters-grid">
+          <div class="filter">
+            <label for="ageRange">Age focus</label>
+            <input id="ageRange" type="range" min="3" max="14" step="1" value="7" />
+            <div class="hint">Showing activities suitable around age <span id="ageValue">7</span></div>
+          </div>
+          <div class="filter">
+            <label>Category</label>
+            <div class="chips">
+              <button class="chip active" data-category="All">All</button>
+              <button class="chip" data-category="Games">Games</button>
+              <button class="chip" data-category="Drawing">Drawing</button>
+              <button class="chip" data-category="Daily Tasks">Daily Tasks</button>
+              <button class="chip" data-category="Help Mother">Help Mother</button>
+              <button class="chip" data-category="Donation">Donation</button>
+              <button class="chip" data-category="Physical">Physical</button>
+              <button class="chip" data-category="Socialization">Socialization</button>
+            </div>
+          </div>
+          <div class="filter">
+            <label for="searchBox">Quick search</label>
+            <input id="searchBox" type="text" class="input" placeholder="Search activities (e.g., ‘drawing’)" />
+          </div>
+          <div class="filter">
+            <label>Format</label>
+            <div class="chips">
+              <button class="chip active" data-format="Any">Any</button>
+              <button class="chip" data-format="Indoor">Indoor</button>
+              <button class="chip" data-format="Outdoor">Outdoor</button>
+              <button class="chip" data-format="Community">Community</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity grid -->
+      <div id="activityGrid" class="activity-grid" aria-live="polite"></div>
+
+      <!-- Progress section (level ranking + streaks) -->
+      <div class="progress-section">
+        <div class="card">
+          <h3>Level Ranking</h3>
+          <div class="level-line">
+            <div class="level-badge" id="levelBadge">Seedling 🌱</div>
+            <div class="progress-bar">
+              <div id="pointsProgress" class="progress-fill" style="width:0%"></div>
+            </div>
+            <div id="pointsLabel" class="points-label">0 pts</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Progress Tracking</h3>
+          <p>Scores, streaks, time-on-task & badges</p>
+          <div class="streak-line">
+            <div class="streak-badge">🔥</div>
+            <div id="streakCount" class="streak-count">Streak: 0 days</div>
+            <button id="btnViewLog" class="btn pill ghost">Activity Log</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="mascot-card boy" aria-hidden="true">
+        <div class="mascot-emoji" aria-label="Boy mascot">👦</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sidebars like image 1 -->
+  <aside class="side mom">
+    <div class="side-title">MOM</div>
+    <ul class="side-list">
+      <li>Approve goals</li>
+      <li>Manage filters</li>
+      <li>Health reminders</li>
+    </ul>
+  </aside>
+  <aside class="side dad">
+    <div class="side-title">DAD</div>
+    <ul class="side-list">
+      <li>Set time limits</li>
+      <li>Track progress</li>
+      <li>Approve rewards</li>
+    </ul>
+  </aside>
+
+  <!-- Modals and panels -->
+  <div id="modalOverlay" class="modal-overlay" hidden></div>
+
+  <!-- Activity Detail Modal -->
+  <dialog id="activityModal" class="modal" aria-labelledby="modalTitle" aria-modal="true">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2 id="modalTitle">Activity</h2>
+        <button type="submit" class="btn icon" aria-label="Close">✖</button>
+      </header>
+      <div class="modal-body">
+        <div id="modalCategory" class="modal-kicker"></div>
+        <p id="modalDesc" class="modal-desc"></p>
+        <div>
+          <h4>Steps</h4>
+          <ol id="modalSteps" class="steps"></ol>
+        </div>
+        <div class="reward-line">
+          <div id="modalPoints" class="points-chip">+0 pts</div>
+          <div class="format-chip" id="modalFormat">Format</div>
+        </div>
+      </div>
+      <footer class="modal-actions">
+        <button id="btnModalBack" type="button" class="btn pill ghost">Back</button>
+        <button id="btnModalStart" type="button" class="btn pill secondary">Start</button>
+        <button id="btnModalComplete" type="button" class="btn pill success">Mark Complete</button>
+        <button type="submit" class="btn pill">Close</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Edit Activity Modal -->
+  <dialog id="editModal" class="modal" aria-modal="true">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2>Edit Activity</h2>
+        <button type="submit" class="btn icon" aria-label="Close">✖</button>
+      </header>
+      <div class="modal-body">
+        <label class="field">
+          <span>Title</span>
+          <input id="editTitle" type="text" class="input" />
+        </label>
+        <label class="field">
+          <span>Reward points</span>
+          <input id="editPoints" type="number" min="0" class="input" />
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <textarea id="editDesc" rows="3" class="input"></textarea>
+        </label>
+      </div>
+      <footer class="modal-actions">
+        <button id="btnEditSave" type="button" class="btn pill success">Save</button>
+        <button type="submit" class="btn pill">Close</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Add Child Modal -->
+  <dialog id="childModal" class="modal" aria-modal="true">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2>Add Child</h2>
+        <button type="submit" class="btn icon" aria-label="Close">✖</button>
+      </header>
+      <div class="modal-body">
+        <label class="field">
+          <span>Name</span>
+          <input id="childNameInput" type="text" class="input" placeholder="e.g., Alex" />
+        </label>
+        <label class="field">
+          <span>Age</span>
+          <input id="childAgeInput" type="number" min="3" max="14" class="input" placeholder="7" />
+        </label>
+        <label class="field">
+          <span>Avatar</span>
+          <select id="childAvatarInput" class="input">
+            <option>🧒</option>
+            <option>👧</option>
+            <option>👦</option>
+            <option>🧑‍🎨</option>
+            <option>🧑‍🚀</option>
+          </select>
+        </label>
+      </div>
+      <footer class="modal-actions">
+        <button id="btnChildSave" type="button" class="btn pill success">Save</button>
+        <button type="submit" class="btn pill">Close</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Parents Panel (Read-only Rules & Guidelines + view content) -->
+  <dialog id="parentModal" class="modal" aria-modal="true">
+    <form method="dialog">
+      <header class="modal-header">
+        <h2>Parents Panel</h2>
+        <button type="submit" class="btn icon" aria-label="Close">✖</button>
+      </header>
+      <div class="modal-body">
+        <div class="parent-gate">
+          <label class="field">
+            <span>Enter Parent PIN (demo: 1234)</span>
+            <input id="parentPin" type="password" class="input" placeholder="••••" />
+          </label>
+          <button id="btnParentUnlock" type="button" class="btn pill primary">OK</button>
+        </div>
+        <div id="parentContent" class="parent-content" hidden>
+          <h3>Rules & Guidelines</h3>
+          <ul class="rules">
+            <li>Activities are fun-first; children choose freely.</li>
+            <li>No tests. Celebrate effort with points and badges.</li>
+            <li>Daily streak counts if any one activity is completed.</li>
+            <li>Outdoor safety: adult supervision recommended.</li>
+            <li>Privacy: no uploads; logs stored locally on your device.</li>
+          </ul>
+          <h3>Recent Activity (read-only)</h3>
+          <ul id="parentLog" class="log"></ul>
+        </div>
+      </div>
+      <footer class="modal-actions">
+        <button type="submit" class="btn pill">Close</button>
+        <button id="btnParentBack" type="button" class="btn pill ghost">Back</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Toasts -->
+  <div id="toast" class="toast" role="status" aria-live="assertive" hidden></div>
+
+  <footer class="footer">
+    © Playful Academy • A family learning experience
+  </footer>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playful Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="parent.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="app-header">
+    <div class="left">
+      <button class="btn back" aria-label="Go Back" id="btnBack">Back</button>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🎒</div>
+        <div class="brand-text">
+          <strong>Playful Academy</strong>
+          <small>Family learning</small>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="right">
+      <button class="btn subscribe" id="btnSubscribe" aria-label="Subscribe to a plan">Subscribe</button>
+    </div>
+  </header>
+
+  <div class="page">
+    <!-- Left guardian panel -->
+    <aside class="guardian guardian--mom" aria-label="Mom panel">
+      <div class="guardian-card">
+        <div class="heart heart--pink" aria-hidden="true">MOM</div>
+        <div class="avatar avatar--mom" aria-label="Mom avatar"></div>
+        <ul class="guardian-actions">
+          <li>Approve goals</li>
+          <li>Manage filters</li>
+          <li>Health reminders</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main id="main" class="content">
+      <!-- Top ribbon description -->
+      <div class="ribbon">
+        <span>View Health Info</span>
+        <span>Progress Tracking</span>
+        <span>Educational Resources</span>
+        <span>Set Goal</span>
+      </div>
+
+      <!-- Tile grid -->
+      <section class="tile-grid" aria-label="Feature tiles">
+        <article class="tile" data-module="health">
+          <h3>View Health Info</h3>
+          <p>Allergies, immunizations, growth & reminders</p>
+          <div class="tile-graphic icon icon--health" aria-hidden="true"></div>
+        <a class="tile-open" href="health.html" aria-label="Open Health Info">Open</a>
+
+
+        </article>
+
+        <article class="tile" data-module="progress">
+          <h3>Progress Tracking</h3>
+          <p>Scores, streaks, time-on-task & badges</p>
+          <div class="tile-graphic icon icon--charts" aria-hidden="true"></div>
+          <button class="tile-open" aria-label="Open Progress Tracking">Open</button>
+        </article>
+
+        <article class="tile" data-module="resources">
+          <h3>Educational Resources</h3>
+          <p>Curated by age, subject & format</p>
+          <div class="tile-graphic icon icon--books" aria-hidden="true"></div>
+          <button class="tile-open" aria-label="Open Educational Resources">Open</button>
+        </article>
+
+        <article class="tile" data-module="goals">
+          <h3>Set Goal</h3>
+          <p>Create SMART goals with rewards</p>
+          <div class="tile-graphic icon icon--target" aria-hidden="true"></div>
+          <button class="tile-open" aria-label="Open Goals">Open</button>
+        </article>
+
+        <article class="tile" data-module="screenTime">
+          <h3>Screen Time Limit</h3>
+          <p>Daily quotas, bedtime & overrides</p>
+          <div class="tile-graphic icon icon--clock" aria-hidden="true"></div>
+          <a class="tile-open" href="screen-time.html" aria-label="Open Screen Time">
+  Open
+</a>
+
+        </article>
+
+        <article class="tile" data-module="filters">
+          <h3>Filter Content</h3>
+          <p>Ratings, whitelists & safe search</p>
+          <div class="tile-graphic icon icon--shield" aria-hidden="true"></div>
+         <a class="tile-open" href="filter-content.html" aria-label="Open Filter Content">
+  Open
+</a>
+
+        </article>
+
+        <article class="tile" data-module="thursday">
+          <h3>Thursday</h3>
+          <p>Day planner, tasks & events</p>
+          <div class="tile-graphic icon icon--calendar" aria-hidden="true"></div>
+         <a class="tile-open" href="day-planner.html" aria-label="Open Thursday Planner">Open</a>
+        </article>
+
+        <article class="tile" data-module="games">
+          <h3>Games/Guidelines</h3>
+          <p>Educational fun with clear rules</p>
+          <div class="tile-graphic icon icon--puzzle" aria-hidden="true"></div>
+          <a class="tile-open" href="game-Guideline.html" aria-label="Open Games and Guidelines">
+  Open
+</a>
+
+        </article>
+
+        <article class="tile" data-module="help">
+          <h3>Help Center</h3>
+          <p>FAQs, tutorials & live support</p>
+          <div class="tile-graphic icon icon--chat" aria-hidden="true"></div>
+         <a class="tile-open" href="help-center.html" aria-label="Open Help Center">
+  Open
+</a>
+
+        </article>
+      </section>
+    </main>
+
+    <!-- Right guardian panel -->
+    <aside class="guardian guardian--dad" aria-label="Dad panel">
+      <div class="guardian-card">
+        <div class="heart heart--red" aria-hidden="true">DAD</div>
+        <div class="avatar avatar--dad" aria-label="Dad avatar"></div>
+        <ul class="guardian-actions">
+          <li>Set time limits</li>
+          <li>Track progress</li>
+          <li>Approve rewards</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+  
+
+  <footer class="app-footer">
+    <small>© Playful Academy • A family learning experience</small>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__backdrop" id="modalBackdrop" tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <header class="modal__header">
+        <h2 id="modalTitle">Module</h2>
+        <button class="btn icon-only" id="modalClose" aria-label="Close">✕</button>
+      </header>
+      <div class="modal__body" id="modalBody">
+        <!-- dynamic content -->
+      </div>
+      <footer class="modal__footer">
+        <button class="btn" id="modalPrimary">OK</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="parentscript.js" defer></script>
+</body>
+</html>

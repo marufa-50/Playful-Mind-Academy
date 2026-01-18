@@ -1,0 +1,11 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            const section = this.getAttribute('id');
+            alert(`You clicked on ${section.replace('-', ' ')} section!`);
+            // Replace alert with your desired functionality
+        });
+    });
+});

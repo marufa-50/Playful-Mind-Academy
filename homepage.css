@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(#bde0fe, #caffbf);
+    text-align: center;
+}
+
+/* Header */
+header {
+    padding: 10px;
+    text-align: left;
+}
+
+.back-btn {
+    background: orange;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* Cloud Navigation */
+.cloud-nav {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.cloud-nav a {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: purple;
+    font-weight: bold;
+}
+
+/* Hero Section */
+.hero {
+    margin-top: 40px;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: 50px;
+    color: orange;
+    text-shadow: 2px 2px black;
+}
+
+.tagline {
+    color: white;
+    font-size: 18px;
+}
+
+/* Age Badge */
+.age-badge {
+    position: absolute;
+    right: 50px;
+    top: 0;
+    background: red;
+    color: white;
+    padding: 20px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* Login Button */
+.login-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: navy;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Kids Section */
+.kids {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.kid {
+    font-size: 80px;
+}
+
+.tent {
+    font-size: 100px;
+}

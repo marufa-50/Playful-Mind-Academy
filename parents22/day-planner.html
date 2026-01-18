@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playful Academy • Day Planner</title>
+  <link rel="stylesheet" href="day-planner.css" />
+</head>
+<body>
+  <header class="topbar">
+   
+
+    <div class="brand">
+      <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f9d2.svg" alt="kid icon" />
+      <div class="brand-text">
+        <div class="brand-name">Playful Academy</div>
+        <div class="brand-sub">Family fun planner</div>
+      </div>
+    </div>
+    <button class="pill subscribe-btn">Subscribe</button>
+  </header>
+
+  <main class="layout">
+    <aside class="side-panel mom">
+      <div class="avatar-circle pink">MOM</div>
+      <ul>
+        <li>Approve goals</li>
+        <li>Manage filters</li>
+        <li>Health reminders</li>
+      </ul>
+    </aside>
+
+    <section class="content">
+      <nav class="tabs">
+        <button class="tab active" data-day="sunday">Sunday</button>
+        <button class="tab" data-day="monday">Monday</button>
+        <button class="tab" data-day="tuesday">Tuesday</button>
+        <button class="tab" data-day="wednesday">Wednesday</button>
+        <button class="tab" data-day="thursday">Thursday</button>
+        <button class="tab" data-day="friday">Friday</button>
+        <button class="tab" data-day="saturday">Saturday</button>
+      </nav>
+
+      <section class="pillbar">
+        <button class="pill secondary">View Health Info</button>
+        <button class="pill secondary">Progress Tracking</button>
+        <button class="pill secondary">Playful Resources</button>
+        <button class="pill secondary">Set Goal</button>
+      </section>
+
+      <section class="stats-row">
+        <div class="stat-card">
+          <div class="label">Weekly Streak</div>
+          <div class="value"><span id="streak-points">12</span> pts</div>
+          <div class="bar"><div id="streak-bar" class="bar-fill" style="width:48%;"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Badges</div>
+          <div class="badges">
+            <span class="badge gold">⭐ Star Helper</span>
+            <span class="badge mint">🎨 Creative Kid</span>
+            <span class="badge coral">🤝 Kind Buddy</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="cards-container" class="cards-grid">
+        <!-- Cards will be injected by JS -->
+      </section>
+    </section>
+
+    <aside class="side-panel dad">
+      <div class="avatar-circle blue">DAD</div>
+      <ul>
+        <li>Set time limits</li>
+        <li>Track progress</li>
+        <li>Approve rewards</li>
+      </ul>
+    </aside>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Activity Details</h3>
+        <button id="modal-close" class="icon-btn">✕</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+      <div class="modal-actions">
+        <button class="pill secondary" id="modal-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">© Playful mind Academy • A family fun experience</footer>
+
+  <script src="day-planner.js"></script>
+</body>
+</html>
