@@ -83,7 +83,7 @@ function viewItem(a){
     <div>
       <div class="title">${a.title}</div>
       <div class="meta">${a.category} • ${a.points} pts • ${a.minutes}m • ${a.status}</div>
-      <div class="bar"><span style="width:${w}%"></span></div>
+      <div class="pbar"><span style="width:${w}%"></span></div>
     </div>
     <div>
       <button class="btn soft start">Start</button>
@@ -137,7 +137,7 @@ function details(id){
   modal.open("Activity Details", `
     <p style="margin:0 0 8px">${a.icon} <strong>${a.title}</strong></p>
     <p class="meta">${a.category} • ${a.points} pts • ${a.minutes}m • ${a.status}</p>
-    <div class="bar"><span style="width:${Math.min(100,Math.round(a.minutes/30*100))}%"></span></div>
+    <div class="pbar"><span style="width:${Math.min(100,Math.round(a.minutes/30*100))}%"></span></div>
     <div class="row" style="margin-top:8px">
       <button id="dStart" class="btn soft">Start</button>
       <button id="dPause" class="btn">Pause</button>
@@ -179,7 +179,7 @@ function addChild(){
 
 // Badges
 function award(c,a){
-  if(a.minutes>=20 && !c.badges.find(b=>b.id==="focus")) c.badges.push({id:"focus",name:"Focus Bee"});         // 20m focus
+  if(a.minutes>=20 && !c.badges.find(b=>b.id==="focus")) c.badges.push({id:"focus",name:"Focus Bee"});
   const helps = c.activities.filter(x=>x.category==="Help Mother" && x.status==="completed").length;
   if(helps>=3 && !c.badges.find(b=>b.id==="helper")) c.badges.push({id:"helper",name:"Helper Star"});
   const dons = c.activities.filter(x=>x.category==="Donation" && x.status==="completed").length;
@@ -243,11 +243,7 @@ function subscribe(){ modal.open("Subscribe", `<p>Thanks for supporting Playful 
 function back(){ history.length>1 ? history.back() : snack("No previous page"); }
 function toggleFull(){
   const el = document.documentElement;
-  if(!document.fullscreenElement){
-    el.requestFullscreen?.(); // user gesture required
-  }else{
-    document.exitFullscreen?.();
-  }
+  if(!document.fullscreenElement){ el.requestFullscreen?.(); } else { document.exitFullscreen?.(); }
 }
 
 // Wire
@@ -262,8 +258,11 @@ function wire(){
   $("#bParents").onclick = parentsView; $("#bSubscribe").onclick = subscribe;
   $("#bFull").onclick = toggleFull;
 
-  const backBtn = $("#cornerBack") || $("#bBack");
-  if(backBtn) backBtn.onclick = back;
+  // Back link in the page header
+  const backLink = document.querySelector(".ghost-btn");
+  if(backLink){
+    backLink.addEventListener("click",(e)=>{ e.preventDefault(); back(); });
+  }
 }
 
 // Init
