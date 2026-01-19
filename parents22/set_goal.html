@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playful Academy • Set Goal</title>
+  <link rel="stylesheet" href="set_goal.css" />
+</head>
+<body>
+   
+  <!-- Top Bar -->
+  <header class="topbar" role="banner" aria-label="Top navigation">
+     <a href="index.html" class="ghost-btn"> Back</a>
+
+    <div class="brand">
+      <span class="brand-lock" aria-hidden="true">🔒</span>
+      <span class="brand-title">Playful Academy</span>
+      <span class="brand-subtitle">Family learning</span>
+    </div>
+
+    <div class="top-actions">
+      <button id="subscribeBtn" class="subscribe-btn" aria-label="Subscribe">
+        Subscribe
+      </button>
+    </div>
+  </header>
+
+  <!-- Background gradient & glow -->
+  <div class="hero">
+    <h1>Set SMART Goals with Rewards</h1>
+    <p>Fun activities only — games, drawing, helping at home, donations, and friendly social tasks.</p>
+  </div>
+
+  <!-- Category pills (for goal filtering) -->
+  <nav class="category-nav" aria-label="Activity categories">
+    <button class="chip active" data-category="All">All</button>
+    <button class="chip" data-category="Games">Games</button>
+    <button class="chip" data-category="Physical Activities">Physical Activities</button>
+    <button class="chip" data-category="Daily Tasks">Daily Tasks</button>
+    <button class="chip" data-category="Drawing">Drawing</button>
+    <button class="chip" data-category="Help Mother">Help Mother</button>
+    <button class="chip" data-category="Donation">Donation</button>
+    <button class="chip" data-category="Socialization">Socialization</button>
+  </nav>
+
+  <!-- Sidebars kept for parent guideline & read-only view -->
+  <aside class="sidebar left" aria-label="Mom panel">
+    <div class="avatar mom" aria-hidden="true"></div>
+    <h3>MOM</h3>
+    <ul>
+      <li>Approve goals (optional)</li>
+      <li>Manage filters</li>
+      <li>Health reminders</li>
+    </ul>
+    <button id="openGuidelines" class="soft-btn">Open Rules & Guidelines</button>
+  </aside>
+
+  <aside class="sidebar right" aria-label="Dad panel">
+    <div class="avatar dad" aria-hidden="true"></div>
+    <h3>DAD</h3>
+    <ul>
+      <li>Set time limits</li>
+      <li>Track progress</li>
+      <li>Approve rewards (optional)</li>
+    </ul>
+    <button id="openParentView" class="soft-btn">View Goals (read-only)</button>
+  </aside>
+
+  <!-- Main content -->
+  <main class="grid">
+    <!-- Card: Set Goal (primary) -->
+    <section class="card highlight">
+      <header>
+        <h2>Set Goal</h2>
+        <p>Create SMART goals with rewards (fun activities)</p>
+      </header>
+      <div class="meter meter-gold" aria-label="Set Goal meter">
+        <div class="fill" style="width: 45%"></div>
+      </div>
+      <footer class="flex">
+        <button class="pill-btn" id="openGoalForm">Open Goal Form</button>
+      </footer>
+    </section>
+
+    <!-- Card: Children & Points -->
+    <section class="card">
+      <header>
+        <h2>Children</h2>
+        <p>Add child profiles (with ID & name) and see points/streaks</p>
+      </header>
+      <div id="childrenList" class="children-list"></div>
+      <footer class="flex">
+        <button class="pill-btn" id="addChildBtn">Add Child</button>
+      </footer>
+    </section>
+
+    <!-- Card: Goals List -->
+    <section class="card wide">
+      <header class="flex">
+        <div>
+          <h2>Goals</h2>
+          <p>Manage, edit, complete, plan for a day & view details</p>
+        </div>
+        <div class="goal-filters">
+          <label>
+            Category:
+            <select id="goalFilterCategory">
+              <option value="All">All</option>
+              <option>Games</option>
+              <option>Physical Activities</option>
+              <option>Daily Tasks</option>
+              <option>Drawing</option>
+              <option>Help Mother</option>
+              <option>Donation</option>
+              <option>Socialization</option>
+            </select>
+          </label>
+          <label>
+            Status:
+            <select id="goalFilterStatus">
+              <option value="All">All</option>
+              <option value="active">Active</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <div id="goalList" class="goal-list" aria-live="polite"></div>
+
+      <footer class="flex">
+        <button class="pill-btn" id="newQuickGoal">Quick Goal</button>
+        <button class="pill-btn outline" id="clearCompleted">Clear Completed</button>
+      </footer>
+    </section>
+
+    <!-- Card: Day Planner -->
+    <section class="card wide">
+      <header class="flex">
+        <div>
+          <h2>Day Planner</h2>
+          <p>Select a date to see and manage planned goals</p>
+        </div>
+        <div class="planner-controls">
+          <label>
+            Date:
+            <input type="date" id="planDate" />
+          </label>
+          <label class="db-field">
+            Plan DB ID (optional)
+            <input type="text" id="planExtId" placeholder="External plan ID" />
+          </label>
+        </div>
+      </header>
+
+      <div id="planList" class="goal-list" aria-live="polite"></div>
+
+      <footer class="flex">
+        <button class="pill-btn outline" id="clearDayPlan">Clear Day Plan</button>
+        <button class="pill-btn ok" id="okDayPlan">OK</button>
+      </footer>
+    </section>
+
+    <!-- Card: Action Log -->
+    <section class="card">
+      <header>
+        <h2>Action Log</h2>
+        <p>Friendly updates for every click</p>
+      </header>
+      <ul id="actionLog" class="action-log" aria-live="polite"></ul>
+      <footer>
+        <button class="pill-btn outline" id="clearLog">OK • Clear Log</button>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <div id="modalOverlay" class="modal-overlay" hidden></div>
+
+  <!-- Goal Form Modal -->
+  <dialog id="goalFormModal" class="modal" aria-labelledby="goalFormTitle">
+    <form method="dialog" class="modal-body" id="goalForm">
+      <header class="modal-header">
+        <h3 id="goalFormTitle">Create SMART Goal</h3>
+        <button type="button" class="icon-btn close" data-close="goalFormModal" aria-label="Close">✖</button>
+      </header>
+
+      <div class="grid-form">
+        <label>
+          Child
+          <select name="childId" id="goalChildSelect" required></select>
+        </label>
+
+        <label>
+          Category
+          <select name="category" id="goalCategory" required>
+            <option>Games</option>
+            <option>Physical Activities</option>
+            <option>Daily Tasks</option>
+            <option>Drawing</option>
+            <option>Help Mother</option>
+            <option>Donation</option>
+            <option>Socialization</option>
+          </select>
+        </label>
+
+        <label class="full">
+          Title
+          <input type="text" name="title" id="goalTitle" placeholder="e.g., Build a 20-piece puzzle" required />
+        </label>
+
+        <label>
+          Specific
+          <textarea name="specific" id="goalSpecific" placeholder="What exactly will be done?" required></textarea>
+        </label>
+
+        <label>
+          Measurable
+          <textarea name="measurable" id="goalMeasurable" placeholder="How will you know it's done?" required></textarea>
+        </label>
+
+        <label>
+          Achievable
+          <textarea name="achievable" id="goalAchievable" placeholder="Is it realistic and safe?" required></textarea>
+        </label>
+
+        <label>
+          Relevant
+          <textarea name="relevant" id="goalRelevant" placeholder="Why is this fun or helpful?" required></textarea>
+        </label>
+
+        <label>
+          Time-bound
+          <input type="date" name="timebound" id="goalTimebound" required />
+        </label>
+
+        <label>
+          Reward
+          <input type="text" name="reward" id="goalReward" placeholder="e.g., Sticker + 10 streak points" required />
+        </label>
+
+        <label>
+          Points (streak)
+          <input type="number" name="points" id="goalPoints" min="1" max="500" value="10" required />
+        </label>
+
+        <label class="db-field">
+          Goal DB ID (optional)
+          <input type="text" name="extId" id="goalExtId" placeholder="External goal ID" />
+        </label>
+      </div>
+
+      <footer class="modal-footer">
+        <button type="submit" class="pill-btn">Save</button>
+        <button type="button" class="pill-btn outline" data-close="goalFormModal">Back</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Goal Details Modal -->
+  <dialog id="goalDetailsModal" class="modal" aria-labelledby="goalDetailsTitle">
+    <div class="modal-body">
+      <header class="modal-header">
+        <h3 id="goalDetailsTitle">Goal Details</h3>
+        <button type="button" class="icon-btn close" data-close="goalDetailsModal" aria-label="Close">✖</button>
+      </header>
+      <div id="goalDetailsContent" class="details-content"></div>
+      <footer class="modal-footer">
+        <button class="pill-btn outline" data-close="goalDetailsModal">Close</button>
+        <button class="pill-btn ok" id="detailsOk">OK</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Parent Guidelines Modal (read-only) -->
+  <dialog id="guidelinesModal" class="modal" aria-labelledby="guidelinesTitle">
+    <div class="modal-body">
+      <header class="modal-header">
+        <h3 id="guidelinesTitle">Rules & Guidelines (Parent View)</h3>
+        <button type="button" class="icon-btn close" data-close="guidelinesModal" aria-label="Close">✖</button>
+      </header>
+      <div class="guidelines">
+        <ul>
+          <li>Parents can view goals and progress. Editing is disabled in parent view.</li>
+          <li>Activities are fun: games, drawing, helping at home, donations, and friendly social tasks.</li>
+          <li>Rewards are positive and safe: stickers, story time, outdoor play, or a favorite snack.</li>
+          <li>Streak points are earned for consistent effort. Celebrate small wins!</li>
+          <li>No academic grading. Focus on creativity, kindness, and teamwork.</li>
+          <li>Keep sessions short, playful, and age-appropriate.</li>
+        </ul>
+      </div>
+      <footer class="modal-footer">
+        <button class="pill-btn outline" data-close="guidelinesModal">Back</button>
+        <button class="pill-btn ok" data-close="guidelinesModal">OK</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Parent Read-Only Goals Modal -->
+  <dialog id="parentViewModal" class="modal" aria-labelledby="parentViewTitle">
+    <div class="modal-body">
+      <header class="modal-header">
+        <h3 id="parentViewTitle">Goals (Read-only)</h3>
+        <button type="button" class="icon-btn close" data-close="parentViewModal" aria-label="Close">✖</button>
+      </header>
+      <div id="parentGoals" class="goal-list readonly"></div>
+      <footer class="modal-footer">
+        <button class="pill-btn outline" data-close="parentViewModal">Back</button>
+        <button class="pill-btn ok" data-close="parentViewModal">OK</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Add Child Modal -->
+  <dialog id="addChildModal" class="modal" aria-labelledby="addChildTitle">
+    <form method="dialog" class="modal-body" id="addChildForm">
+      <header class="modal-header">
+        <h3 id="addChildTitle">Add Child</h3>
+        <button type="button" class="icon-btn close" data-close="addChildModal" aria-label="Close">✖</button>
+      </header>
+      <div class="grid-form">
+        <label class="db-field">
+          Child ID (for database)
+          <input type="text" name="extId" id="childExtId" placeholder="e.g., CH-1029" />
+        </label>
+        <label>
+          Name
+          <input type="text" name="name" id="childName" required placeholder="e.g., Ava" />
+        </label>
+        <label>
+          Favorite Color
+          <input type="color" name="color" id="childColor" value="#ff8fb3" />
+        </label>
+        <label>
+          Emoji Badge
+          <input type="text" name="emoji" id="childEmoji" maxlength="2" placeholder="🎨 or 🧩" />
+        </label>
+      </div>
+      <footer class="modal-footer">
+        <button type="submit" class="pill-btn">Save</button>
+        <button type="button" class="pill-btn outline" data-close="addChildModal">Back</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="set_goal.js"></script>
+</body>
+</html>
