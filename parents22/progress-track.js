@@ -1,6 +1,7 @@
-/* Simple, humanized progress tracking + left database console.
-   Data is tiny and saved to localStorage per user.
+/* Simple, humanized progress tracking (full-screen view, corner Back, centered title).
+   Data is saved to localStorage per user.
 */
+
 const k = (s)=>`pa_${window.APP_USER}_${s}`;
 const $ = (q)=>document.querySelector(q);
 const $$ = (q)=>Array.from(document.querySelectorAll(q));
@@ -16,7 +17,7 @@ const modal = {
   close(){ $("#modal").classList.remove("show"); }
 };
 
-// Seed data (short and friendly)
+// Seed data
 const seed = [
   { id: uid(), name:"Ayaan", score:20, badges:[{id:"focus",name:"Focus Bee"}], days:[], timers:{},
     activities:[
@@ -33,94 +34,16 @@ const seed = [
 
 let state = load() || { children: seed, activeId: seed[0].id };
 
-// NEW: Database config
-const DB = {
-  config: loadDB() || { mode:"local", base:"", key:"", childCol:"children", actCol:"activities", status:"idle" },
-  save(){ localStorage.setItem(k("db_config"), JSON.stringify(DB.config)); updateDBUI(); },
-  set(part){ Object.assign(DB.config, part); DB.save(); },
-  test(){
-    // Soft test: For remote, just validate fields; Optionally try fetch if CORs allows.
-    if(DB.config.mode!=="remote"){ DB.config.status="local ok"; DB.save(); snack("Local mode OK"); return; }
-    if(!DB.config.base){ DB.config.status="missing base url"; DB.save(); snack("Enter Base URL"); return; }
-    DB.config.status="testing…"; DB.save();
-    // Try a HEAD or GET to base, but do not fail loudly if blocked.
-    fetch(DB.config.base, { method:"GET" }).then(()=>{
-      DB.config.status="remote reachable"; DB.save(); snack("Remote reachable");
-    }).catch(()=>{
-      DB.config.status="remote not reachable"; DB.save(); snack("Couldn’t reach remote");
-    });
-  },
-  export(){
-    const blob = { state, config: DB.config };
-    const json = JSON.stringify(blob, null, 2);
-    modal.open("Export JSON", `
-      <p>Copy your snapshot:</p>
-      <textarea id="expTxt" style="width:100%;height:280px">${escape(json)}</textarea>
-    `,"Close");
-  },
-  import(){
-    modal.open("Import JSON", `
-      <p>Paste snapshot JSON:</p>
-      <textarea id="impTxt" style="width:100%;height:280px" placeholder="{ state: ..., config: ... }"></textarea>
-    `,"Import", ()=>{
-      try{
-        const blob = JSON.parse($("#impTxt").value || "{}");
-        if(blob.state){ state = blob.state; save(); }
-        if(blob.config){ DB.config = blob.config; DB.save(); }
-        renderChildren(); renderLists(); renderBadges(); sync();
-        snack("Imported");
-      }catch(e){ snack("Invalid JSON"); }
-    }, true, ()=>modal.close());
-  },
-  clear(){
-    if(!confirm("Clear local data for this user?")) return;
-    localStorage.removeItem(k("state"));
-    localStorage.removeItem(k("db_config"));
-    state = { children: seed, activeId: seed[0].id };
-    DB.config = { mode:"local", base:"", key:"", childCol:"children", actCol:"activities", status:"idle" };
-    save(); DB.save(); renderChildren(); renderLists(); renderBadges(); sync(); snack("Local data cleared");
-  },
-  push(){
-    if(DB.config.mode!=="remote"){ snack("Switch to remote mode first"); return; }
-    DB.config.status="syncing →"; DB.save();
-    // Example POST stub (disabled by default). Uncomment and fit to your API.
-    /*
-    fetch(`${DB.config.base}/sync`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${DB.config.key}` },
-      body: JSON.stringify({ children: state.children })
-    }).then(()=>{ DB.config.status="synced"; DB.save(); snack("Sync complete"); })
-      .catch(()=>{ DB.config.status="sync failed"; DB.save(); snack("Sync failed"); });
-    */
-    snack("Demo sync: no remote called");
-  },
-  pull(){
-    if(DB.config.mode!=="remote"){ snack("Switch to remote mode first"); return; }
-    DB.config.status="pulling ←"; DB.save();
-    // Demo pull: gentle message; real call commented.
-    /*
-    fetch(`${DB.config.base}/snapshot`, { headers: { "Authorization":`Bearer ${DB.config.key}` }})
-      .then(r=>r.json())
-      .then(blob=>{ if(blob.children){ state.children = blob.children; save(); renderLists(); renderChildren(); renderBadges(); } DB.config.status="pulled"; DB.save(); snack("Pulled from remote"); })
-      .catch(()=>{ DB.config.status="pull failed"; DB.save(); snack("Pull failed"); });
-    */
-    snack("Demo pull: no remote called");
-  }
-};
-
 // Utils
 function uid(){ return Math.random().toString(36).slice(2,9); }
 function a(title,cat,pts,icon){ return { id:uid(), title, category:cat, points:pts, icon, minutes:0, status:"pending" }; }
-function save(){ localStorage.setItem(k("state"), JSON.stringify(state)); sync(); updateDBUI(); }
+function save(){ localStorage.setItem(k("state"), JSON.stringify(state)); sync(); }
 function load(){ try{ return JSON.parse(localStorage.getItem(k("state"))); }catch(e){ return null; } }
-function loadDB(){ try{ return JSON.parse(localStorage.getItem(k("db_config"))); }catch(e){ return null; } }
 function child(){ return state.children.find(c=>c.id===state.activeId); }
-const escape = (s)=>String(s).replace(/[&<>"']/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-// Simple streak: if last completion was yesterday, +1; if gap >1 day, reset to 1.
+// Streaks & Level
 function addStreakDay(c){
   const today = new Date(); today.setHours(0,0,0,0);
-  const y = new Date(today); y.setDate(y.getDate()-1);
   const last = c.days.length ? new Date(c.days[c.days.length-1]) : null;
   if(!last || (today-last>86400000)) c.days.push(today.toISOString());
 }
@@ -151,7 +74,6 @@ function renderLists(){
   $("#library").innerHTML = items.map(viewItem).join("");
   $("#today").innerHTML   = c.activities.filter(a=>a.status!=="completed").filter(filt).map(viewItem).join("");
   wireItemButtons("#library"); wireItemButtons("#today");
-  updateDBUI();
 }
 function viewItem(a){
   const w = Math.min(100, Math.round(a.minutes/30*100));
@@ -197,7 +119,7 @@ function sync(){
   $("#levelFill").style.width = levelPct(c.score)+"%";
 }
 
-// Actions (short and friendly)
+// Actions
 function start(id){ child().timers[id] = Date.now(); snack("Timer started"); save(); }
 function pause(id){
   const c = child(); const t = c.timers[id]; if(!t){ snack("No timer"); return; }
@@ -255,7 +177,7 @@ function addChild(){
   state.children.push(c); state.activeId=c.id; save(); renderChildren(); renderLists(); renderBadges(); snack("Child added");
 }
 
-// Badges (short rules)
+// Badges
 function award(c,a){
   if(a.minutes>=20 && !c.badges.find(b=>b.id==="focus")) c.badges.push({id:"focus",name:"Focus Bee"});         // 20m focus
   const helps = c.activities.filter(x=>x.category==="Help Mother" && x.status==="completed").length;
@@ -315,28 +237,17 @@ function progress(){
     <div class="badges">${c.badges.length?c.badges.map(b=>`<span class="badge">${b.name}</span>`).join(""):"No badges yet"}</div>
   `,"OK");
 }
-function subscribe(){ modal.open("Subscribe", `<p>Thanks for supporting Playful Academy! Extra themes and badge packs unlock.</p>`,"OK"); }
+
+// Fullscreen helpers
+function subscribe(){ modal.open("Subscribe", `<p>Thanks for supporting Playful Mind Academy! Extra themes and badge packs unlock.</p>`,"OK"); }
 function back(){ history.length>1 ? history.back() : snack("No previous page"); }
-
-// NEW: Fullscreen toggle
-function toggleFull(){ document.body.classList.toggle("full"); }
-
-// NEW: Update DB stats and bind console UI
-function updateDBUI(){
-  const cCount = state.children.length;
-  const acts = state.children.flatMap(c=>c.activities);
-  const aCount = acts.length;
-  const pending = acts.filter(a=>a.status!=="completed").length;
-  const completed = acts.filter(a=>a.status==="completed").length;
-  const timers = state.children.reduce((m,c)=> m + Object.keys(c.timers||{}).length, 0);
-
-  $("#stChildren").textContent = cCount;
-  $("#stActivities").textContent = aCount;
-  $("#stPending").textContent = pending;
-  $("#stCompleted").textContent = completed;
-  $("#stTimers").textContent = timers;
-  $("#stMode").textContent = DB.config.mode;
-  $("#stStatus").textContent = DB.config.status || "idle";
+function toggleFull(){
+  const el = document.documentElement;
+  if(!document.fullscreenElement){
+    el.requestFullscreen?.(); // user gesture required
+  }else{
+    document.exitFullscreen?.();
+  }
 }
 
 // Wire
@@ -348,38 +259,13 @@ function wire(){
   $("#bGuidelines").onclick = ()=>badgeInfo(); // parents read only view
   $("#bBadgeInfo").onclick = badgeInfo; $("#bRank").onclick = ranking; $("#bProgress").onclick = progress;
 
-  $("#bParents").onclick = parentsView; $("#bSubscribe").onclick = subscribe; $("#bBack").onclick = back;
+  $("#bParents").onclick = parentsView; $("#bSubscribe").onclick = subscribe;
   $("#bFull").onclick = toggleFull;
 
-  // Database console bindings
-  $("#dbMode").value = DB.config.mode;
-  $("#dbMode").onchange = (e)=>{
-    DB.set({ mode:e.target.value });
-    $("#dbRemoteWrap").hidden = DB.config.mode!=="remote";
-    snack(DB.config.mode==="remote" ? "Remote mode enabled" : "Local mode");
-  };
-  $("#dbRemoteWrap").hidden = DB.config.mode!=="remote";
-  $("#dbBase").value = DB.config.base || "";
-  $("#dbKey").value = DB.config.key || "";
-  $("#dbChildCol").value = DB.config.childCol || "children";
-  $("#dbActCol").value = DB.config.actCol || "activities";
-  $("#bDBTest").onclick = ()=>DB.test();
-  $("#bDBSave").onclick = ()=>{
-    DB.set({
-      base: $("#dbBase").value.trim(),
-      key: $("#dbKey").value.trim(),
-      childCol: $("#dbChildCol").value.trim() || "children",
-      actCol: $("#dbActCol").value.trim() || "activities"
-    });
-    snack("Saved DB config");
-  };
-  $("#bExport").onclick = ()=>DB.export();
-  $("#bImport").onclick = ()=>DB.import();
-  $("#bClear").onclick = ()=>DB.clear();
-  $("#bSyncPush").onclick = ()=>DB.push();
-  $("#bSyncPull").onclick = ()=>DB.pull();
+  const backBtn = $("#cornerBack") || $("#bBack");
+  if(backBtn) backBtn.onclick = back;
 }
 
 // Init
-function init(){ renderChildren(); renderLists(); renderBadges(); sync(); wire(); updateDBUI(); }
+function init(){ renderChildren(); renderLists(); renderBadges(); sync(); wire(); }
 document.addEventListener("DOMContentLoaded", init);
