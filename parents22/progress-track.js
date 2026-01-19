@@ -1,4 +1,4 @@
-/* Simple, humanized progress tracking.
+/* Simple, humanized progress tracking + left database console.
    Data is tiny and saved to localStorage per user.
 */
 const k = (s)=>`pa_${window.APP_USER}_${s}`;
@@ -33,11 +33,89 @@ const seed = [
 
 let state = load() || { children: seed, activeId: seed[0].id };
 
+// NEW: Database config
+const DB = {
+  config: loadDB() || { mode:"local", base:"", key:"", childCol:"children", actCol:"activities", status:"idle" },
+  save(){ localStorage.setItem(k("db_config"), JSON.stringify(DB.config)); updateDBUI(); },
+  set(part){ Object.assign(DB.config, part); DB.save(); },
+  test(){
+    // Soft test: For remote, just validate fields; Optionally try fetch if CORs allows.
+    if(DB.config.mode!=="remote"){ DB.config.status="local ok"; DB.save(); snack("Local mode OK"); return; }
+    if(!DB.config.base){ DB.config.status="missing base url"; DB.save(); snack("Enter Base URL"); return; }
+    DB.config.status="testing…"; DB.save();
+    // Try a HEAD or GET to base, but do not fail loudly if blocked.
+    fetch(DB.config.base, { method:"GET" }).then(()=>{
+      DB.config.status="remote reachable"; DB.save(); snack("Remote reachable");
+    }).catch(()=>{
+      DB.config.status="remote not reachable"; DB.save(); snack("Couldn’t reach remote");
+    });
+  },
+  export(){
+    const blob = { state, config: DB.config };
+    const json = JSON.stringify(blob, null, 2);
+    modal.open("Export JSON", `
+      <p>Copy your snapshot:</p>
+      <textarea id="expTxt" style="width:100%;height:280px">${escape(json)}</textarea>
+    `,"Close");
+  },
+  import(){
+    modal.open("Import JSON", `
+      <p>Paste snapshot JSON:</p>
+      <textarea id="impTxt" style="width:100%;height:280px" placeholder="{ state: ..., config: ... }"></textarea>
+    `,"Import", ()=>{
+      try{
+        const blob = JSON.parse($("#impTxt").value || "{}");
+        if(blob.state){ state = blob.state; save(); }
+        if(blob.config){ DB.config = blob.config; DB.save(); }
+        renderChildren(); renderLists(); renderBadges(); sync();
+        snack("Imported");
+      }catch(e){ snack("Invalid JSON"); }
+    }, true, ()=>modal.close());
+  },
+  clear(){
+    if(!confirm("Clear local data for this user?")) return;
+    localStorage.removeItem(k("state"));
+    localStorage.removeItem(k("db_config"));
+    state = { children: seed, activeId: seed[0].id };
+    DB.config = { mode:"local", base:"", key:"", childCol:"children", actCol:"activities", status:"idle" };
+    save(); DB.save(); renderChildren(); renderLists(); renderBadges(); sync(); snack("Local data cleared");
+  },
+  push(){
+    if(DB.config.mode!=="remote"){ snack("Switch to remote mode first"); return; }
+    DB.config.status="syncing →"; DB.save();
+    // Example POST stub (disabled by default). Uncomment and fit to your API.
+    /*
+    fetch(`${DB.config.base}/sync`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":`Bearer ${DB.config.key}` },
+      body: JSON.stringify({ children: state.children })
+    }).then(()=>{ DB.config.status="synced"; DB.save(); snack("Sync complete"); })
+      .catch(()=>{ DB.config.status="sync failed"; DB.save(); snack("Sync failed"); });
+    */
+    snack("Demo sync: no remote called");
+  },
+  pull(){
+    if(DB.config.mode!=="remote"){ snack("Switch to remote mode first"); return; }
+    DB.config.status="pulling ←"; DB.save();
+    // Demo pull: gentle message; real call commented.
+    /*
+    fetch(`${DB.config.base}/snapshot`, { headers: { "Authorization":`Bearer ${DB.config.key}` }})
+      .then(r=>r.json())
+      .then(blob=>{ if(blob.children){ state.children = blob.children; save(); renderLists(); renderChildren(); renderBadges(); } DB.config.status="pulled"; DB.save(); snack("Pulled from remote"); })
+      .catch(()=>{ DB.config.status="pull failed"; DB.save(); snack("Pull failed"); });
+    */
+    snack("Demo pull: no remote called");
+  }
+};
+
+// Utils
 function uid(){ return Math.random().toString(36).slice(2,9); }
 function a(title,cat,pts,icon){ return { id:uid(), title, category:cat, points:pts, icon, minutes:0, status:"pending" }; }
-function save(){ localStorage.setItem(k("state"), JSON.stringify(state)); sync(); }
+function save(){ localStorage.setItem(k("state"), JSON.stringify(state)); sync(); updateDBUI(); }
 function load(){ try{ return JSON.parse(localStorage.getItem(k("state"))); }catch(e){ return null; } }
+function loadDB(){ try{ return JSON.parse(localStorage.getItem(k("db_config"))); }catch(e){ return null; } }
 function child(){ return state.children.find(c=>c.id===state.activeId); }
+const escape = (s)=>String(s).replace(/[&<>"']/g,(m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
 // Simple streak: if last completion was yesterday, +1; if gap >1 day, reset to 1.
 function addStreakDay(c){
@@ -48,13 +126,11 @@ function addStreakDay(c){
 }
 function streakCount(c){
   if(!c.days.length) return 0;
-  // count consecutive days from end until a gap
   let count=1;
   for(let i=c.days.length-1;i>0;i--){
     const d1=new Date(c.days[i]), d0=new Date(c.days[i-1]);
     if((d1-d0)/86400000===1) count++; else break;
   }
-  // reset visually if last day isn’t today
   const t=new Date(); t.setHours(0,0,0,0);
   const last=new Date(c.days[c.days.length-1]); last.setHours(0,0,0,0);
   if((t-last)/86400000>=1) count=0;
@@ -75,6 +151,7 @@ function renderLists(){
   $("#library").innerHTML = items.map(viewItem).join("");
   $("#today").innerHTML   = c.activities.filter(a=>a.status!=="completed").filter(filt).map(viewItem).join("");
   wireItemButtons("#library"); wireItemButtons("#today");
+  updateDBUI();
 }
 function viewItem(a){
   const w = Math.min(100, Math.round(a.minutes/30*100));
@@ -241,18 +318,68 @@ function progress(){
 function subscribe(){ modal.open("Subscribe", `<p>Thanks for supporting Playful Academy! Extra themes and badge packs unlock.</p>`,"OK"); }
 function back(){ history.length>1 ? history.back() : snack("No previous page"); }
 
+// NEW: Fullscreen toggle
+function toggleFull(){ document.body.classList.toggle("full"); }
+
+// NEW: Update DB stats and bind console UI
+function updateDBUI(){
+  const cCount = state.children.length;
+  const acts = state.children.flatMap(c=>c.activities);
+  const aCount = acts.length;
+  const pending = acts.filter(a=>a.status!=="completed").length;
+  const completed = acts.filter(a=>a.status==="completed").length;
+  const timers = state.children.reduce((m,c)=> m + Object.keys(c.timers||{}).length, 0);
+
+  $("#stChildren").textContent = cCount;
+  $("#stActivities").textContent = aCount;
+  $("#stPending").textContent = pending;
+  $("#stCompleted").textContent = completed;
+  $("#stTimers").textContent = timers;
+  $("#stMode").textContent = DB.config.mode;
+  $("#stStatus").textContent = DB.config.status || "idle";
+}
+
 // Wire
 function wire(){
   $("#childSel").onchange = (e)=>{ state.activeId = e.target.value; save(); renderLists(); renderBadges(); };
   $("#q").oninput = renderLists; $("#cat").onchange = renderLists;
   $("#bAdd").onclick = addActivity; $("#bAddChild").onclick = addChild;
 
-  $("#bGuidelines").onclick = ()=>badgeInfo(); // keep it light; parents read only
+  $("#bGuidelines").onclick = ()=>badgeInfo(); // parents read only view
   $("#bBadgeInfo").onclick = badgeInfo; $("#bRank").onclick = ranking; $("#bProgress").onclick = progress;
 
   $("#bParents").onclick = parentsView; $("#bSubscribe").onclick = subscribe; $("#bBack").onclick = back;
+  $("#bFull").onclick = toggleFull;
+
+  // Database console bindings
+  $("#dbMode").value = DB.config.mode;
+  $("#dbMode").onchange = (e)=>{
+    DB.set({ mode:e.target.value });
+    $("#dbRemoteWrap").hidden = DB.config.mode!=="remote";
+    snack(DB.config.mode==="remote" ? "Remote mode enabled" : "Local mode");
+  };
+  $("#dbRemoteWrap").hidden = DB.config.mode!=="remote";
+  $("#dbBase").value = DB.config.base || "";
+  $("#dbKey").value = DB.config.key || "";
+  $("#dbChildCol").value = DB.config.childCol || "children";
+  $("#dbActCol").value = DB.config.actCol || "activities";
+  $("#bDBTest").onclick = ()=>DB.test();
+  $("#bDBSave").onclick = ()=>{
+    DB.set({
+      base: $("#dbBase").value.trim(),
+      key: $("#dbKey").value.trim(),
+      childCol: $("#dbChildCol").value.trim() || "children",
+      actCol: $("#dbActCol").value.trim() || "activities"
+    });
+    snack("Saved DB config");
+  };
+  $("#bExport").onclick = ()=>DB.export();
+  $("#bImport").onclick = ()=>DB.import();
+  $("#bClear").onclick = ()=>DB.clear();
+  $("#bSyncPush").onclick = ()=>DB.push();
+  $("#bSyncPull").onclick = ()=>DB.pull();
 }
 
 // Init
-function init(){ renderChildren(); renderLists(); renderBadges(); sync(); wire(); }
+function init(){ renderChildren(); renderLists(); renderBadges(); sync(); wire(); updateDBUI(); }
 document.addEventListener("DOMContentLoaded", init);

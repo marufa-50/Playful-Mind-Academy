@@ -9,87 +9,161 @@
 <body>
   <header class="bar">
     <button id="bBack" class="btn">← Back</button>
-    <div class="brand">🔒 Playful Academy <span class="sub">Family learning</span></div>
+    <div class="brand">🔒 Playful Mind Academy <span class="sub"> Playful Mind Academy</span></div>
     <div class="bar-actions">
       <button id="bParents" class="btn outline">Parents View</button>
+      <button id="bFull" class="btn">⤢ Fullscreen</button>
       <button id="bSubscribe" class="btn green">Subscribe</button>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="card hero">
-      <div>
-        <h1>Progress Tracking</h1>
-        <p>Friendly scores, streaks, time-on-task and badges for playful activities: 🎮 games, 🎨 drawing, 🤝 helping, 💝 donating, 🏃 moving, 🗣️ socializing.</p>
+  <!-- Full-screen two-column layout: left = Database Console, right = App -->
+  <div class="layout">
+    <!-- Left database panel -->
+    <aside id="dbSide" class="side card">
+      <h2>Database Console</h2>
+      <p class="meta">Configure storage, view stats, import/export data.</p>
 
+      <div class="db-section">
         <div class="row">
-          <label>Child</label>
-          <select id="childSel"></select>
-          <button id="bAddChild" class="btn soft">+ Add Child</button>
-        </div>
-
-        <div class="pill">
-          <div><small>Score</small><strong id="sScore">0</strong></div>
-          <div><small>Streak</small><strong id="sStreak">0 days 🔥</strong></div>
-          <div><small>Time today</small><strong id="sTime">0m</strong></div>
-          <div><small>Level</small><strong id="sLevel">Newbie 🌱</strong></div>
-        </div>
-
-        <button id="bProgress" class="btn green">Open</button>
-      </div>
-
-      <div class="chips">
-        <span>🎮 Games</span><span>🎨 Drawing</span><span>🤝 Help</span>
-        <span>💝 Donating</span><span>🏃 Physical</span><span>🗣️ Social</span>
-      </div>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Activities Library</h2>
-        <p>Pick, edit and track playful tasks. Points grow streak power.</p>
-        <div class="row">
-          <input id="q" type="search" placeholder="Search…" />
-          <select id="cat">
-            <option value="">All</option>
-            <option>Games</option><option>Drawing</option><option>Help Mother</option>
-            <option>Donation</option><option>Physical</option><option>Socialization</option>
+          <label for="dbMode">Storage Mode</label>
+          <select id="dbMode">
+            <option value="local">LocalStorage (default)</option>
+            <option value="remote">Remote API</option>
           </select>
-          <button id="bAdd" class="btn soft">+ Add Activity</button>
         </div>
-        <div id="library" class="list"></div>
+
+        <div id="dbRemoteWrap" class="db-remote" hidden>
+          <div class="row">
+            <label for="dbBase">Base URL</label>
+            <input id="dbBase" type="url" placeholder="https://api.example.com" />
+          </div>
+          <div class="row">
+            <label for="dbKey">API Key</label>
+            <input id="dbKey" type="password" placeholder="••••••••" />
+          </div>
+          <div class="row">
+            <label for="dbChildCol">Children Collection</label>
+            <input id="dbChildCol" type="text" placeholder="children" />
+          </div>
+          <div class="row">
+            <label for="dbActCol">Activities Collection</label>
+            <input id="dbActCol" type="text" placeholder="activities" />
+          </div>
+          <div class="row">
+            <button id="bDBTest" class="btn">Test Connection</button>
+            <button id="bDBSave" class="btn green">Save Config</button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div><small>Children</small><strong id="stChildren">0</strong></div>
+          <div><small>Activities</small><strong id="stActivities">0</strong></div>
+          <div><small>Pending</small><strong id="stPending">0</strong></div>
+          <div><small>Completed</small><strong id="stCompleted">0</strong></div>
+          <div><small>Timers</small><strong id="stTimers">0</strong></div>
+          <div><small>Mode</small><strong id="stMode">local</strong></div>
+          <div><small>Status</small><strong id="stStatus">idle</strong></div>
+        </div>
+
+        <div class="row">
+          <button id="bExport" class="btn outline">Export JSON</button>
+          <button id="bImport" class="btn">Import JSON</button>
+          <button id="bClear" class="btn red">Clear Local Data</button>
+        </div>
+        <div class="row">
+          <button id="bSyncPush" class="btn">Sync → Remote</button>
+          <button id="bSyncPull" class="btn">Pull ← Remote</button>
+        </div>
+
+        <details class="db-help">
+          <summary>Help</summary>
+          <ul>
+            <li>LocalStorage is per user and device.</li>
+            <li>Remote API is optional. Provide Base URL, API Key and collection names.</li>
+            <li>Export/Import uses a single JSON snapshot.</li>
+            <li>Sync buttons are safe stubs; they won’t call a real API unless configured.</li>
+          </ul>
+        </details>
       </div>
+    </aside>
 
-      <div class="card">
-        <h2>Today’s Tasks</h2>
-        <p>Start a task to track time. Complete it to earn points and badges.</p>
-        <div id="today" class="list"></div>
-      </div>
-    </section>
+    <!-- Right main app -->
+    <main class="wrap">
+      <section class="card hero">
+        <div>
+          <h1>Progress Tracking</h1>
+          <p>Friendly scores, streaks, time-on-task and badges for playful activities: 🎮 games, 🎨 drawing, 🤝 helping, 💝 donating, 🏃 moving, 🗣️ socializing.</p>
 
-    <section class="grid">
-      <div class="card">
-        <h2>Badges</h2>
-        <div id="badges" class="badges"></div>
-        <button id="bBadgeInfo" class="btn outline">Badge Info</button>
-      </div>
+          <div class="row">
+            <label>Child</label>
+            <select id="childSel"></select>
+            <button id="bAddChild" class="btn soft">+ Add Child</button>
+          </div>
 
-      <div class="card">
-        <h2>Level</h2>
-        <div class="barline"><span id="levelFill"></span></div>
-        <div class="row small"><span>🌱 Newbie</span><span>⭐ Active</span><span>🌟 Super</span><span>🏆 Champ</span></div>
-        <button id="bRank" class="btn outline">Open</button>
-      </div>
-    </section>
+          <div class="pill">
+            <div><small>Score</small><strong id="sScore">0</strong></div>
+            <div><small>Streak</small><strong id="sStreak">0 days 🔥</strong></div>
+            <div><small>Time today</small><strong id="sTime">0m</strong></div>
+            <div><small>Level</small><strong id="sLevel">Newbie 🌱</strong></div>
+          </div>
 
-    <section class="card">
-      <h2>Games / Guidelines</h2>
-      <p>Clear, kind rules. Parents can view only.</p>
-      <button id="bGuidelines" class="btn soft">Open</button>
-    </section>
+          <button id="bProgress" class="btn green">Open</button>
+        </div>
 
-    <footer class="foot">© Playful Academy • A family learning experience</footer>
-  </main>
+        <div class="chips">
+          <span>🎮 Games</span><span>🎨 Drawing</span><span>🤝 Help</span>
+          <span>💝 Donating</span><span>🏃 Physical</span><span>🗣️ Social</span>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Activities Library</h2>
+          <p>Pick, edit and track playful tasks. Points grow streak power.</p>
+          <div class="row">
+            <input id="q" type="search" placeholder="Search…" />
+            <select id="cat">
+              <option value="">All</option>
+              <option>Games</option><option>Drawing</option><option>Help Mother</option>
+              <option>Donation</option><option>Physical</option><option>Socialization</option>
+            </select>
+            <button id="bAdd" class="btn soft">+ Add Activity</button>
+          </div>
+          <div id="library" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h2>Today’s Tasks</h2>
+          <p>Start a task to track time. Complete it to earn points and badges.</p>
+          <div id="today" class="list"></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Badges</h2>
+          <div id="badges" class="badges"></div>
+          <button id="bBadgeInfo" class="btn outline">Badge Info</button>
+        </div>
+
+        <div class="card">
+          <h2>Level</h2>
+          <div class="barline"><span id="levelFill"></span></div>
+          <div class="row small"><span>🌱 Newbie</span><span>⭐ Active</span><span>🌟 Super</span><span>🏆 Champ</span></div>
+          <button id="bRank" class="btn outline">Open</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Games / Guidelines</h2>
+        <p>Clear, kind rules. Parents can view only.</p>
+        <button id="bGuidelines" class="btn soft">Open</button>
+      </section>
+
+      <footer class="foot">© Playful Academy • A family learning experience</footer>
+    </main>
+  </div>
 
   <!-- Simple modal -->
   <div id="modal" class="modal">
